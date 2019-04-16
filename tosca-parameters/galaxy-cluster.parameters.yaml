@@ -4,11 +4,32 @@ tabs: [ "Virtual hardware", "Galaxy"]
 # Set here a new set of inputs to be displayed
 inputs:
 
-  instance_flavor:
+  fe_instance_flavor:
     display_name: "Instance flavour"
     tag_type: "select"
     description: "CPUs, memory size (RAM), root disk size"
     constraints: 
+      - { value: "small", label: "Small (1 cpu, 2 GB RAM, 20 GB dsk)" }
+      - { value: "medium", label: "Medium (2 cpu, 4 GB RAM, 20 GB dsk)" }
+      - { value: "large", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
+      - { value: "xlarge", label: "xLarge (8 cpu, 16 GB RAM, 20 GB dsk)" }
+    tab: "Virtual hardware"
+
+  wn_num:
+    display_name: "Worker nodes number"
+    type": "select"
+    description: "Number of worker nodes in the cluster"
+    constraints:
+      - { value: "1", label: "1 worker node" }
+      - { value: "2", label: "2 worker nodes" }
+      - { value: "3", label: "3 worker nodes" }
+    tab: "Virtual hardware"
+
+  wn_instance_flavor:
+    display_name: "Worker nodes flavour"
+    tag_type: "select"
+    description: "CPUs, memory size (RAM), root disk size"
+    constraints:
       - { value: "small", label: "Small (1 cpu, 2 GB RAM, 20 GB dsk)" }
       - { value: "medium", label: "Medium (2 cpu, 4 GB RAM, 20 GB dsk)" }
       - { value: "large", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
@@ -20,6 +41,7 @@ inputs:
     tag_type": "text"
     description: "Paste here your SSH public key"
     tab: "Virtual hardware"
+    required: yes
 
   galaxy_storage_type:
     display_name: "Enable encryption"
@@ -69,7 +91,7 @@ inputs:
     tag_type: "select"
     description: "Load Galaxy tools preset"
     constraints: 
-      - { value: "galaxy-minimal", label: "Galaxy minimal" }
+      - { value: "galaxy-no-tools", label: "Galaxy minimal" }
       - { value: "galaxy-CoVaCS", label: "Galaxy CoVaCS" }
       - { value: "galaxy-GDC_Somatic_Variant", label: "Galaxy GDC Somatic Variant Calling" }
       - { value: "galaxy-rna-workbench", label: "Galaxy RNA workbench" }
