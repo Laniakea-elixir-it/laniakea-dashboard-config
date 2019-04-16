@@ -17,7 +17,7 @@ inputs:
 
   wn_num:
     display_name: "Worker nodes number"
-    type": "select"
+    tag_type": "select"
     description: "Number of worker nodes in the cluster"
     constraints:
       - { value: "1", label: "1 worker node" }
