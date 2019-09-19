@@ -1,0 +1,4 @@
+metadata:
+  icon: https://galaxyproject.org/images/galaxy-logos/galaxy_project_logo_square.png
+  display_name: "Galaxy cluster"
+  virtualization_type: "Express"

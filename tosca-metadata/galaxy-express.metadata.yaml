@@ -1,0 +1,6 @@
+metadata:
+  icon: https://galaxyproject.org/images/galaxy-logos/galaxy_project_logo_square.png
+  display_name: "Galaxy"
+  virtualization_type: "Express"
+  pinned: 'yes'
+  pin_order: 0

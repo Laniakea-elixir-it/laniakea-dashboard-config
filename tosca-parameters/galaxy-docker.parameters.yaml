@@ -40,23 +40,10 @@ inputs:
     tag_type: "select"
     description: "Select storage size"
     constraints:
-      - { value: "50 GB", label: "50 GB" }
       - { value: "100 GB", label: "100 GB" }
       - { value: "200 GB", label: "200 GB" }
       - { value: "500 GB", label: "500 GB" }
     tab: "Virtual hardware"
-
-  version:
-    display_name: "Galaxy version"
-    tag_type: "select"
-    description: "Galaxy release 18.05 recommended"
-    constraints:
-      - { value: "release_19.05", label: "Galaxy release 19.05" }
-      - { value: "release_19.01", label: "Galaxy release 19.01" }
-      - { value: "release_18.09", label: "Galaxy release 18.09" }
-      - { value: "release_18.05", label: "Galaxy release 18.05" }
-      - { value: "release_17.05", label: "Galaxy release 17.05" }
-    tab: "Galaxy"
 
   instance_description:
     display_name: "Instance description"
@@ -77,11 +64,12 @@ inputs:
     tag_type: "select"
     description: "Load Galaxy tools preset"
     constraints: 
-      - { value: "galaxy-minimal", label: "Galaxy minimal" }
-      - { value: "galaxy-CoVaCS", label: "Galaxy CoVaCS" }
-      - { value: "galaxy-GDC_Somatic_Variant", label: "Galaxy GDC Somatic Variant Calling" }
-      - { value: "galaxy-rna-workbench", label: "Galaxy RNA workbench" }
-      - { value: "galaxy-epigen", label: "Galaxy Epigen" }
+      - { value: "bgruening/galaxy-stable:19.01", label: "Official Galaxy docker (19.01)" }
+      - { value: "bgruening/galaxy-stable:18.05", label: "Official Galaxy docker (18.05)" }
+      - { value: "bgruening/galaxy-rna-workbench:19.01", label: "Galaxy RNA workbench (19.01)" }
+      - { value: "laniakeacloud/galaxy-covacs:19.01_nowf", label: "Galaxy CoVaCS (19.01)" }
+      - { value: "laniakeacloud/galaxy-gdc_somatic_variant:19.01_nowf", label: "Galaxy GDC Somatic Variant (19.01)" }
+      - { value: "laniakeacloud/galaxy-epigen:19.01", label: "Galaxy Epigen (19.01)" }
     tab: "Galaxy"
 
   refdata_cvmfs_repository_name:
@@ -89,7 +77,7 @@ inputs:
     tag_type: "select"
     description: "Select reference data repository"
     constraints:
+      - { value: "data.galaxyproject.org", label: "usegalaxy.org Galaxy reference data CVMFS repository" }
       - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
       - { value: "elixir-italy.covacs.refdata", label: "ELIXIR-IT Galaxy CoVaCS reference data CVMFS repository" }
-      - { value: "data.galaxyproject.org", label: "usegalaxy.org Galaxy reference data CVMFS repository" }
     tab: "Galaxy"

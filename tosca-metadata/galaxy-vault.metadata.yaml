@@ -1,0 +1,5 @@
+template_metadata:
+  name: galaxy-vault.yaml
+  display_name: "Galaxy"
+  parameters_file: "/opt/tosca-parameters/galaxy-vault.parameters.yaml"
+  icon: "/opt/tosca-metadata/images/galaxy.png" 
