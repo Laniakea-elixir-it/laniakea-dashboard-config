@@ -68,7 +68,7 @@ topology_template:
     vault_url:
       type: string
       description: Hashicorp Vault server url
-      default: "https://cloud-90-147-75-223.cloud.ba.infn.it:8200"
+      default: changeit
       required: false
     vault_wrapping_token:
       type: string
