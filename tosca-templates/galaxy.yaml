@@ -6,7 +6,7 @@ imports:
 description: >
   Deploy Galaxy on a single Virtual Machine installing it from scratch (SLOW).
   The basic configuration includes CentOS 7, the selected Galaxy flavour, companion software and reference data.
-  Configure, click on the "Submit" button and wait for the confirmation e-mail(s) with instructions on how to provide your passphrase (if encryption is enabled) and log in to your new Galaxy instance.
+  Configure, click on the "Submit" button, wait for the confirmation e-mail(s) and log in to your new Galaxy instance.
   If after some hours you do not receive any e-mail please be sure to check your SPAM BOX.
 
 topology_template:

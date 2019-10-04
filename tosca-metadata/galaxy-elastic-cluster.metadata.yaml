@@ -1,4 +1,6 @@
 metadata:
   icon: https://galaxyproject.org/images/galaxy-logos/galaxy_project_logo_square.png 
   display_name: "Galaxy elastic cluster (BETA)"
-  virtualization_type: "Live build"
+  ribbon: true
+  ribbon_tag: "Live build"
+  ribbon_color: "green"
