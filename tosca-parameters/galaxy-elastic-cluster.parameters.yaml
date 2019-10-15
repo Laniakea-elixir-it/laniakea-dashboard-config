@@ -13,7 +13,7 @@ inputs:
       - { value: "large", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
     tab: "Virtual hardware"
 
-  wn_num:
+  wn_num_max:
     display_name: "Worker nodes number"
     tag_type: "select"
     description: "Number of worker nodes in the cluster"
