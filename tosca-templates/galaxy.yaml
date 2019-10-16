@@ -194,8 +194,6 @@ topology_template:
         os:
           properties:
             image: centos-7-vmi
-            #image: ubuntu-16.04-vmi
-            #image: centos-7_2nic
       requirements:
         # contextually this can only be a relationship type
         - local_storage:
