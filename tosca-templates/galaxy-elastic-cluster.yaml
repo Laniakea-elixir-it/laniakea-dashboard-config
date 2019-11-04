@@ -21,14 +21,26 @@ topology_template:
       description: Minimum number of WNs in the elastic cluster
       default: 0
       required: yes
-    fe_instance_flavor:
-      type: string
-      description: front end flavor (num_cpu, memory, disk)
-      default: medium
-    wn_instance_flavor:
-      type: string
-      description: worker nodes flavor (num_cpu, memory, disk)
-      default: medium
+    fe_cpus:
+      type: integer
+      description: Numer of CPUs for the front-end node
+      default: 1
+      required: yes
+    fe_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the front-end node
+      default: 1 GB
+      required: yes
+    wn_cpus:
+      type: integer
+      description: Numer of CPUs for the WNs
+      default: 1
+      required: yes
+    wn_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the WNs
+      default: 1 GB
+      required: yes
     storage_size:
       type: string
       description: storage memory required for the instance
@@ -38,6 +50,11 @@ topology_template:
       description: Flag to specify that this cluster will work in an hybrid environment
       default: false
       required: false
+    resource_allocation_type:
+      type: string
+      description: SLURM resource allocation algorithm (linear or cons_res)
+      required: false
+      default: cons_res
 
     admin_email:
       type: string
@@ -189,6 +206,7 @@ topology_template:
       properties:
         wn_ips: { get_attribute: [ lrms_wn, private_address ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       requirements:
         - host: lrms_server
 
@@ -217,12 +235,11 @@ topology_template:
                 source_range: [ 30000, 30009 ]
         host:
           properties:
-            instance_type: { get_input: fe_instance_flavor }
+            num_cpus: { get_input: fe_cpus }
+            mem_size: { get_input: fe_mem }
         os:
           properties:
-            image: centos-7-galaxy-base
-            #image: centos-7_2nic
-            #image: ubuntu-16.04_2nic
+            image: centos-7-vmi
       requirements:
         # contextually this can only be a relationship type
         - local_storage:
@@ -246,6 +263,7 @@ topology_template:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       capabilities:
         wn:
           properties:
@@ -286,20 +304,13 @@ topology_template:
         scalable:
           properties:
             count: { get_input: wn_num_min }
-        endpoint:
-          properties:
-            # Needed on ReCaS Cloud.
-            # The name of the private network is hard-coded here to append the right interface.
-            # This configuration broke the portability.
-            network_name: private_net
         host:
           properties:
-            instance_type: { get_input: wn_instance_flavor }
+            num_cpus: { get_input: wn_cpus }
+            mem_size: { get_input: wn_mem }
         os:
           properties:
-            image: centos-7-galaxy-base
-            #image: centos-7_2nic
-            #image: ubuntu-16.04_2nic
+            image: centos-7-vmi
 
   outputs:
     endpoint:
