@@ -34,6 +34,11 @@ topology_template:
       description: Flag to specify that this cluster will work in an hybrid environment
       default: false
       required: false
+    resource_allocation_type:
+      type: string
+      description: SLURM resource allocation algorithm (linear or cons_res)
+      required: false
+      default: cons_res
 
     admin_email:
       type: string
@@ -90,6 +95,10 @@ topology_template:
       type: string
       description: Galaxy flavor for tools installation
       default: "galaxy-no-tools"
+    remote_tool_deps_dir_url:
+      type: string
+      description: tools tar gz location
+      default: 'http://cloud.recas.ba.infn.it:8080/v1/AUTH_3b4918e0a982493e8c3ebcc43586a2a8/Laniakea-generic-cloud-images'
 
     reference_data:
       type: boolean
@@ -142,6 +151,7 @@ topology_template:
         instance_key_pub: { get_input: instance_key_pub }
         export_dir: { get_input: export_dir }
         flavor: { get_input: flavor }
+        remote_tool_deps_dir_url: { get_input: remote_tool_deps_dir_url }
       requirements:
         - lrms: lrms_front_end
 
@@ -165,6 +175,7 @@ topology_template:
       properties:
         wn_ips: { get_attribute: [ lrms_wn, private_address ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       requirements:
         - host: lrms_server
 
@@ -197,7 +208,7 @@ topology_template:
             instance_type: { get_input: fe_instance_flavor }
         os:
           properties:
-            image: { concat: ['centos-7-', get_input: flavor,'-', get_input: version ] } # centos-7-galaxy-no-tools-release_17.05
+            image: { concat: ['centos-7-', get_input: flavor,'-', get_input: version ] } # centos-7-galaxy-no-tools-release_19.05
       requirements:
         # contextually this can only be a relationship type
         - local_storage:
@@ -221,6 +232,7 @@ topology_template:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       requirements:
         - host: lrms_wn
         # The worker node is configured after the galaxy_portal to share /export
@@ -258,9 +270,7 @@ topology_template:
             instance_type: { get_input: wn_instance_flavor }
         os:
           properties:
-            image: centos-7-galaxy-base-wn
-            #image: centos-7_2nic
-            #image: ubuntu-16.04-vmi
+            image: centos-7-galaxy-wn
 
   outputs:
     endpoint:
