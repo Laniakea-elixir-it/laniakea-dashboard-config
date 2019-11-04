@@ -189,7 +189,7 @@ topology_template:
         # Guest Operating System properties
         os:
           properties:
-            image: { concat: ['centos-7-', get_input: flavor,'-', get_input: version ] } # centos-7-galaxy-no-tools-release_17.05
+            image: { concat: ['RECAS-BARI-centos-7-', get_input: flavor,'-', get_input: version ] } # centos-7-galaxy-no-tools-release_17.05
       requirements:
         # contextually this can only be a relationship type
         - local_storage:

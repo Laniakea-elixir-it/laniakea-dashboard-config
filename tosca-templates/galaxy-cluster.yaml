@@ -223,7 +223,8 @@ topology_template:
             mem_size: { get_input: fe_mem }
         os:
           properties:
-            image: centos-7-vmi
+            #image: centos-7-vmi
+            image: RECAS-BARI-galaxy-base
       requirements:
         # contextually this can only be a relationship type
         - local_storage:
@@ -286,7 +287,8 @@ topology_template:
             mem_size: { get_input: wn_mem }
         os:
           properties:
-            image: centos-7-vmi
+            #image: centos-7-vmi
+            image: RECAS-BARI-galaxy-base
 
   outputs:
     endpoint:
