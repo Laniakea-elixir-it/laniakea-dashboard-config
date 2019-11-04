@@ -63,10 +63,9 @@ inputs:
   version:
     display_name: "Galaxy version"
     tag_type: "select"
-    description: "Galaxy release 18.05 recommended"
+    description: "Galaxy release 19.05 recommended"
     constraints:
-      - { value: "release_18.05", label: "Galaxy release 18.05" }
-      - { value: "release_17.05", label: "Galaxy release 17.05" }
+      - { value: "release_19.05", label: "Galaxy release 19.05" }
     tab: "Galaxy"
 
   instance_description:
@@ -101,6 +100,6 @@ inputs:
     description: "Select reference data repository"
     constraints:
       - { value: "data.galaxyproject.org", label: "usegalaxy.org Galaxy reference data CVMFS repository" }
-      - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
       - { value: "elixir-italy.covacs.refdata", label: "ELIXIR-IT Galaxy CoVaCS reference data CVMFS repository" }
+      - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
     tab: "Galaxy"
