@@ -28,7 +28,6 @@ inputs:
     tag_type: "select"
     description: "CPUs, memory size (RAM), root disk size"
     constraints:
-      - { value: "{'wn_cpus':'2', 'wn_mem':'4 GB'}", label: "Medium (2 cpu, 4 GB RAM, 20 GB dsk)" }
       - { value: "{'wn_cpus':'4', 'wn_mem':'8 GB'}", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
       - { value: "{'wn_cpus':'8', 'wn_mem':'16 GB'}", label: "xLarge (8 cpu, 16 GB RAM, 20 GB dsk)" }
     tab: "Virtual hardware"
