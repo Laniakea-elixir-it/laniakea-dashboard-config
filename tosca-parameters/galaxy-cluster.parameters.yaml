@@ -4,13 +4,13 @@ tabs: [ "Virtual hardware", "Galaxy"]
 # Set here a new set of inputs to be displayed
 inputs:
 
-  fe_instance_flavor:
+  instance_flavor_fe:
     display_name: "Instance flavour"
     tag_type: "select"
     description: "CPUs, memory size (RAM), root disk size"
     constraints: 
-      - { value: "medium", label: "Medium (2 cpu, 4 GB RAM, 20 GB dsk)" }
-      - { value: "large", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
+      - { value: "{'fe_cpus':'2', 'fe_mem':'4 GB'}", label: "Medium (2 cpu, 4 GB RAM, 20 GB dsk)" }
+      - { value: "{'fe_cpus':'4', 'fe_mem':'8 GB'}", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
     tab: "Virtual hardware"
 
   wn_num:
@@ -23,14 +23,13 @@ inputs:
       - { value: "3", label: "3 worker nodes" }
     tab: "Virtual hardware"
 
-  wn_instance_flavor:
+  instance_flavor_wn:
     display_name: "Worker nodes flavour"
     tag_type: "select"
     description: "CPUs, memory size (RAM), root disk size"
     constraints:
-      - { value: "medium", label: "Medium (2 cpu, 4 GB RAM, 20 GB dsk)" }
-      - { value: "large", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
-      - { value: "xlarge", label: "xLarge (8 cpu, 16 GB RAM, 20 GB dsk)" }
+      - { value: "{'wn_cpus':'4', 'wn_mem':'8 GB'}", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
+      - { value: "{'wn_cpus':'8', 'wn_mem':'16 GB'}", label: "xLarge (8 cpu, 16 GB RAM, 20 GB dsk)" }
     tab: "Virtual hardware"
 
   instance_key_pub:
@@ -63,8 +62,9 @@ inputs:
   version:
     display_name: "Galaxy version"
     tag_type: "select"
-    description: "Galaxy release 18.05 recommended"
+    description: "Galaxy release 19.05 recommended"
     constraints:
+      - { value: "release_19.05", label: "Galaxy release 19.05" }
       - { value: "release_18.05", label: "Galaxy release 18.05" }
       - { value: "release_17.05", label: "Galaxy release 17.05" }
     tab: "Galaxy"
@@ -101,6 +101,6 @@ inputs:
     description: "Select reference data repository"
     constraints:
       - { value: "data.galaxyproject.org", label: "usegalaxy.org Galaxy reference data CVMFS repository" }
-      - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
       - { value: "elixir-italy.covacs.refdata", label: "ELIXIR-IT Galaxy CoVaCS reference data CVMFS repository" }
+      - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
     tab: "Galaxy"

@@ -17,14 +17,26 @@ topology_template:
       description: Number of WNs in the cluster
       default: 2
       required: yes
-    fe_instance_flavor:
-      type: string
-      description: front end flavor (num_cpu, memory, disk)
-      default: small
-    wn_instance_flavor:
-      type: string
-      description: worker nodes flavor (num_cpu, memory, disk)
-      default: small
+    fe_cpus:
+      type: integer
+      description: Numer of CPUs for the front-end node
+      default: 1
+      required: yes
+    fe_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the front-end node
+      default: 1 GB
+      required: yes
+    wn_cpus:
+      type: integer
+      description: Numer of CPUs for the WNs
+      default: 1
+      required: yes
+    wn_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the WNs
+      default: 1 GB
+      required: yes
     storage_size:
       type: string
       description: storage memory required for the instance
@@ -34,6 +46,11 @@ topology_template:
       description: Flag to specify that this cluster will work in an hybrid environment
       default: false
       required: false
+    resource_allocation_type:
+      type: string
+      description: SLURM resource allocation algorithm (linear or cons_res)
+      required: false
+      default: cons_res
 
     admin_email:
       type: string
@@ -46,7 +63,7 @@ topology_template:
     version:
       type: string
       description: galaxy version to install
-      default: master
+      default: release_18.05
     instance_description:
       type: string
       description: galaxy instance description
@@ -90,6 +107,10 @@ topology_template:
       type: string
       description: Galaxy flavor for tools installation
       default: "galaxy-no-tools"
+    remote_tool_deps_dir_url:
+      type: string
+      description: tools tar gz location
+      default: 'http://cloud.recas.ba.infn.it:8080/v1/AUTH_3b4918e0a982493e8c3ebcc43586a2a8/Laniakea-generic-cloud-images'
 
     reference_data:
       type: boolean
@@ -142,6 +163,7 @@ topology_template:
         instance_key_pub: { get_input: instance_key_pub }
         export_dir: { get_input: export_dir }
         flavor: { get_input: flavor }
+        remote_tool_deps_dir_url: { get_input: remote_tool_deps_dir_url }
       requirements:
         - lrms: lrms_front_end
 
@@ -194,7 +216,8 @@ topology_template:
                 source_range: [ 30000, 30009 ]
         host:
           properties:
-            instance_type: { get_input: fe_instance_flavor }
+            num_cpus: { get_input: fe_cpus }
+            mem_size: { get_input: fe_mem }
         os:
           properties:
             image: { concat: ['centos-7-', get_input: flavor,'-', get_input: version ] } # centos-7-galaxy-no-tools-release_17.05
@@ -255,12 +278,11 @@ topology_template:
             count: { get_input: wn_num }
         host:
           properties:
-            instance_type: { get_input: wn_instance_flavor }
+            num_cpus: { get_input: wn_cpus }
+            mem_size: { get_input: wn_mem }
         os:
           properties:
-            image: centos-7-galaxy-base-wn
-            #image: centos-7_2nic
-            #image: ubuntu-16.04-vmi
+            image: centos-7-galaxy-wn
 
   outputs:
     endpoint:

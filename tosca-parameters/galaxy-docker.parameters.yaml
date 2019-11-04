@@ -78,6 +78,6 @@ inputs:
     description: "Select reference data repository"
     constraints:
       - { value: "data.galaxyproject.org", label: "usegalaxy.org Galaxy reference data CVMFS repository" }
-      - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
       - { value: "elixir-italy.covacs.refdata", label: "ELIXIR-IT Galaxy CoVaCS reference data CVMFS repository" }
+      - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
     tab: "Galaxy"

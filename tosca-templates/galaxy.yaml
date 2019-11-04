@@ -193,9 +193,7 @@ topology_template:
         # Guest Operating System properties
         os:
           properties:
-            image: centos-7-galaxy-base
-            #image: ubuntu-16.04-vmi
-            #image: centos-7_2nic
+            image: centos-7-vmi
       requirements:
         # contextually this can only be a relationship type
         - local_storage:
