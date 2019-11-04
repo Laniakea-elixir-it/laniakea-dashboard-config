@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/mtangaro/tosca-types/v3.0.1/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/v3.0.1/custom_types.yaml
 
 description: >
   Deploy Galaxy from scratch with cluster support (SLOW).
@@ -16,14 +16,26 @@ topology_template:
       description: Number of WNs in the cluster
       default: 2
       required: yes
-    fe_instance_flavor:
-      type: string
-      description: front end flavor (num_cpu, memory, disk)
-      default: small
-    wn_instance_flavor:
-      type: string
-      description: worker nodes flavor (num_cpu, memory, disk)
-      default: small
+    fe_cpus:
+      type: integer
+      description: Numer of CPUs for the front-end node
+      default: 1
+      required: yes
+    fe_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the front-end node
+      default: 1 GB
+      required: yes
+    wn_cpus:
+      type: integer
+      description: Numer of CPUs for the WNs
+      default: 1
+      required: yes
+    wn_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the WNs
+      default: 1 GB
+      required: yes
     storage_size:
       type: string
       description: storage memory required for the instance
@@ -33,6 +45,11 @@ topology_template:
       description: Flag to specify that this cluster will work in an hybrid environment
       default: false
       required: false
+    resource_allocation_type:
+      type: string
+      description: SLURM resource allocation algorithm (linear or cons_res)
+      required: false
+      default: cons_res
 
     admin_email:
       type: string
@@ -173,6 +190,7 @@ topology_template:
       properties:
         wn_ips: { get_attribute: [ lrms_wn, private_address ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       requirements:
         - host: lrms_server
 
@@ -201,11 +219,11 @@ topology_template:
                 source_range: [ 30000, 30009 ]
         host:
           properties:
-            instance_type: { get_input: fe_instance_flavor }
+            num_cpus: { get_input: fe_cpus }
+            mem_size: { get_input: fe_mem }
         os:
           properties:
-            image: galaxy-base
-            #image: centos-7-vmi
+            image: centos-7-vmi
       requirements:
         # contextually this can only be a relationship type
         - local_storage:
@@ -229,6 +247,7 @@ topology_template:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       requirements:
         - host: lrms_wn
         # The worker node is configured after the galaxy_portal to share /export
@@ -263,11 +282,11 @@ topology_template:
             count: { get_input: wn_num }
         host:
           properties:
-            instance_type: { get_input: wn_instance_flavor }
+            num_cpus: { get_input: wn_cpus }
+            mem_size: { get_input: wn_mem }
         os:
           properties:
-            image: galaxy-base
-            #image: centos-7-vmi
+            image: centos-7-vmi
 
   outputs:
     endpoint:
