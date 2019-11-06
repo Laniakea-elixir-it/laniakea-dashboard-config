@@ -187,6 +187,7 @@ topology_template:
       properties:
         wn_ips: { get_attribute: [ lrms_wn, private_address ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       requirements:
         - host: lrms_server
 
@@ -197,7 +198,6 @@ topology_template:
           properties:
             dns_name: slurmserver
             network_name: PUBLIC
-            ports:
             ports:
               galaxyctl_api_port:
                 protocol: tcp
@@ -244,6 +244,7 @@ topology_template:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
         hybrid: { get_input: hybrid }
+        resource_allocation_type: { get_input: resource_allocation_type }
       requirements:
         - host: lrms_wn
         # The worker node is configured after the galaxy_portal to share /export
