@@ -82,7 +82,7 @@ topology_template:
     remote_tool_deps_dir_url:
       type: string
       description: tools tar gz location
-      default: 'http://cloud.recas.ba.infn.it:8080/v1/AUTH_3b4918e0a982493e8c3ebcc43586a2a8/Laniakea-generic-cloud-images'
+      default: 'http://cloud.recas.ba.infn.it:8080/v1/AUTH_3b4918e0a982493e8c3ebcc43586a2a8/Laniakea-galaxy-tools-tar'
 
     reference_data:
       type: boolean
