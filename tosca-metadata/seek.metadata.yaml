@@ -1,0 +1,6 @@
+metadata:
+  icon: https://fair-dom.org/wp-content/uploads/2016/06/SEEK-full.png
+  display_name: "Fairdom SEEK"
+  ribbon: true
+  ribbon_tag: "Live build"
+  ribbon_color: "green"

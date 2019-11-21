@@ -1,0 +1,15 @@
+inputs:
+
+  num_cpus:
+    tag_type: "text"
+    default: "2"
+    description: number of cpus required for the instance
+
+  mem_size:
+    tag_type: "text"
+    default: "4 GB"
+    description: ram memory required for the instance
+
+  flavor:
+    tag_type: "hidden"
+    default: "seek-server"
