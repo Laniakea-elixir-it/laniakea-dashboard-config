@@ -1,0 +1,6 @@
+metadata:
+  icon: https://www.ichom.org/wp-content/uploads/2013/10/Erasmuslogo-for-slider.png
+  display_name: "myFAIR"
+  ribbon: true
+  ribbon_tag: "Live build"
+  ribbon_color: "green"
