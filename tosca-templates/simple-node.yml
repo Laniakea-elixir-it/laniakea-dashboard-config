@@ -1,0 +1,59 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: >
+  Launch a compute node getting the IP and SSH credentials to access via ssh
+
+metadata:
+  display_name: Start a virtual machine
+  icon: https://icon-library.com/images/virtual-machine-icon/virtual-machine-icon-10.jpg
+  tag: "Live"
+  tag_color: "green"
+
+topology_template:
+
+  inputs:
+
+    users:
+      type: list
+      description: list of users to create on the VM
+      entry_schema:
+        type: tosca.datatypes.indigo.User
+      default: []
+      required: false
+
+  node_templates:
+
+    simple_node:
+      type: tosca.nodes.indigo.Compute
+      properties:
+        os_users: { get_input: users }
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            #instance_type: small
+            num_cpus: 1
+            mem_size: 2 GB
+        os:
+          properties:
+            #image: ubuntu-20.04
+            #distribution: { get_input: os_distribution }
+            distribution: centos
+            version: 7
+            #type: Linux
+
+  outputs:
+    endpoint:
+      value: { get_attribute: [ simple_node, public_address, 0 ] }
+    node_creds:
+      value: { get_attribute: [ simple_node, endpoint, credential, 0 ] }
+    os_users:
+      value: { get_property: [ simple_node, os_users, 0 ] }
