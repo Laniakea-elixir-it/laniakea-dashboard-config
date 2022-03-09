@@ -1,0 +1,5 @@
+metadata:
+  icon: https://phac-nml.github.io/irida-documentation/images/IRIDA_LIGHT_300px.png
+  display_name: "IRIDA"
+  tag: "Live"
+  tag_color: "green"

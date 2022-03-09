@@ -1,0 +1,52 @@
+# Set here the list of the tabs to be displayed
+tabs: [ "Irida" ]
+
+# Set here a new set of inputs to be displayed
+inputs:
+
+  storage_size:
+    display_name: "Irida Storage volume size"
+    type: "select"
+    description: "Select storage size for the IRIDA server."
+    constraints:
+      - { value: "10 GB", label: "10 GB" }
+      - { value: "50 GB", label: "50 GB" }
+      - { value: "100 GB", label: "100 GB" }
+    tab: "Irida"
+
+  galaxy_cpus:
+    display_name: "Galaxy compute node vCPUs number"
+    type: "select"
+    description: Number of virtual cpus for the Galaxy compute node
+    default: 1
+    constraints:
+      - { value: "4", label: "4" }
+      - { value: "8", label: "8" }
+    tab: "Irida"
+
+  galaxy_mem:
+    display_name: "Galaxy compute node Memory"
+    type: dependent_select
+    parent: galaxy_cpus
+    description: Amount of memory for the Galaxy compute node
+    default: 2 GB
+    constraints:
+      - { value: "8 GB", label: "8 GB", parent_value: "4"  }
+      - { value: "16 GB", label: "16 GB", parent_value: "8"  }
+    tab: "Irida"
+
+  fe_cpus:
+    default: 2
+    type: hidden
+  fe_mem:
+    default: 4 GB
+    type: hidden
+  export_dir:
+    default: /export
+    type: hidden
+  users:
+    type: ssh_user
+
+outputs:
+  os_users:
+    type: ssh_user
