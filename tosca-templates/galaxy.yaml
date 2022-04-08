@@ -3,22 +3,25 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 imports:
   - indigo_custom_types: https://raw.githubusercontent.com/mtangaro/tosca-types/laniakea-galaxy/custom_types.yaml
 
+
 description: >
-  Deploy Galaxy on a single Virtual Machine.
+  Deploy Galaxy on a single Virtual Machine using Ansible roles.
   The basic configuration includes CentOS 7, the selected Galaxy flavour, companion software and reference data.
   Configure, click on the "Submit" button, wait for the confirmation e-mail(s) and log in to your new Galaxy instance.
   If after some hours you do not receive any e-mail please be sure to check your SPAM BOX.
 
 topology_template:
+
   inputs:
 
-    #os_users:
-    #  type: list
-    #  description: prova
-    #  entry_schema:
-    #    type: tosca.datatypes.indigo.Users
-    #  default: []
-
+    # Instance config
+    users:
+      type: list
+      description: list of users to create on the VM
+      entry_schema:
+        type: tosca.datatypes.indigo.User
+      default: []
+      required: false
     instance_flavor:
       type: string
       description: instance flavor (num_cpu, memory, disk)
@@ -26,22 +29,48 @@ topology_template:
     storage_size:
       type: string
       description: storage memory required for the instance
-      default: 10 GB      
-
+      default: 50 GB      
     os_distribution:
       type: string
-      default: ubuntu
+      default: centos
       description: Operating System distro
       constraints:
         - valid_values: [ "ubuntu", "centos" ]
-
     os_version:
       type: version
-      default: 16.04
+      default: 7
       description: Operating System distribution version
       constraints:
-        - valid_values: [ 16.04, 7 ]
+        - valid_values: [ 20.04, 7 ]
 
+    # Storage encryption
+    storage_encryption:
+      type: boolean
+      description: Enable storage encryption using Vault to store secrets and LUKS to encrypt
+      default: False
+      required: true
+    vault_url:
+      type: string
+      description: Hashicorp Vault server url
+      default: changeit
+      required: false
+    vault_wrapping_token:
+      type: string
+      description: Vault Wrapping token to write secret
+      default: not_a_wrapping_token
+      required: false
+    vault_secret_path:
+      type: string
+      description: Vault path to store secret
+      default: "subject/depuuid"
+      required: false
+    vault_secret_key:
+      type: string
+      description: Vault secret key name
+      default: secret
+      required: false
+
+    # Galaxy config
     admin_email:
       type: string
       description: email of the admin user
@@ -56,7 +85,7 @@ topology_template:
       default: galaxy
     version:
       type: string
-      description: galaxy version to install
+      description: Galaxy version to install
       default: release_20.05
     instance_description:
       type: string
@@ -71,7 +100,25 @@ topology_template:
       description: Enable Galaxy Interactive Environments (install docker)
       default: false
 
+    # Galaxy tools config
+    flavor:
+      type: string
+      description: Galaxy flavor for tools installation
+      default: "galaxy-minimal"
+
   node_templates:
+
+    luks_encryption:
+      type: tosca.nodes.indigo.LuksEncryption
+      properties:
+        storage_encryption: { get_input: storage_encryption }
+        vault_url: { get_input: vault_url }
+        vault_wrapping_token: { get_input: vault_wrapping_token }
+        vault_secret_path: { get_input: vault_secret_path }
+        vault_secret_key: { get_input: vault_secret_key }
+        #wn_ips: { get_attribute: [ lrms_wn, private_address ] }
+      requirements:
+        - host: galaxy_server
 
     galaxy:
       type: tosca.nodes.indigo.GalaxyPortal
@@ -81,20 +128,22 @@ topology_template:
         version: { get_input: version }
         instance_description: { get_input: instance_description }
         export_dir: { get_input: export_dir }
-        enable_galaxy_ie: { get_input: enable_galaxy_ie}
+        flavor: { get_input: flavor }
       requirements:
         - lrms: local_lrms
+        - dependency: luks_encryption
 
     # type to describe a Galaxy not using any LRMS but using the local system
     local_lrms:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Local
       requirements:
         - host: galaxy_server
+        - dependency: luks_encryption
  
     galaxy_server:
       type: tosca.nodes.indigo.Compute
       properties:
-        os_users: [ {os_user_name: 'testuser', os_user_guid: '4001', os_user_add_to_sudoers: True, os_user_ssh_public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDrm8mxOuqwP5XTHf685V9rqRXXg41F4isJvRr4h3MPDs8PgqZBzzjxEFyGpJ/Rgg4ACesGBZy+CbVVGtOveltKvgkpzyHIrh+vMay9z82eK2LMZEfmEPgw1BHdRifPZ1Qb7Zmj1nRk1EMWoNvbBxEc3/MSorWb+2SVMs+42EZ7QxavBmsU7zNU0Nd0e1xiqJ00VDWMnXullp/ieR9M4/XsSlS3oqxsxkAbY3eQYVMsnh64oiRw3lpYBkPyNtC/VSL5Cqig3CMaiK9AW8FjP1GwwqoMjL0H0Mkr0fY8eSSQ9Tcy5AqyaiPn7tmG0fSeNOFwxGkTzrujqlCiOkRSM1Yj marco@MacBook-Pro-di-Marco.local'} ]
+        os_users: { get_input: users }
       capabilities:
         endpoint:
           properties:
@@ -146,7 +195,9 @@ topology_template:
 
   outputs:
     endpoint:
-      #value: { concat: [ 'http://', get_attribute: [ galaxy_server, public_address, 0 ], '/galaxy' ] }
-      value: { concat: [ 'http://', get_attribute: [ galaxy_server, public_address, 0 ] ] }
+      value: { concat: [ 'http://', get_attribute: [ galaxy_server, public_address, 0 ], '/galaxy' ] }
+      #value: { concat: [ 'http://', get_attribute: [ galaxy_server, public_address, 0 ] ] }
     node_ip:
       value: { get_attribute: [ galaxy_server, public_address, 0 ] }
+    os_users:
+      value: { get_property: [ galaxy_server, os_users, 0 ] }
