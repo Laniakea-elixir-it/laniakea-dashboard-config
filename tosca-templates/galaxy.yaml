@@ -22,6 +22,7 @@ topology_template:
         type: tosca.datatypes.indigo.User
       default: []
       required: false
+
     instance_flavor:
       type: string
       description: instance flavor (num_cpu, memory, disk)
@@ -29,7 +30,7 @@ topology_template:
     storage_size:
       type: string
       description: storage memory required for the instance
-      default: 50 GB      
+      default: 10 GB      
     os_distribution:
       type: string
       default: centos
@@ -49,58 +50,67 @@ topology_template:
       description: Enable storage encryption using Vault to store secrets and LUKS to encrypt
       default: False
       required: true
-    vault_url:
-      type: string
-      description: Hashicorp Vault server url
-      default: changeit
+    vault_encryption_token:
+      type: tosca.datatypes.indigo.VaultToken
+      description: Vault write token for storage encryption
+      default: { "policy": "write" }
       required: false
-    vault_wrapping_token:
+    vault_encryption_path:
       type: string
-      description: Vault Wrapping token to write secret
-      default: not_a_wrapping_token
+      description: Secret path for encryption passphrase
+      default: "sub/dep.uuid/storage_encryption"
       required: false
-    vault_secret_path:
+    vault_encryption_key:
       type: string
-      description: Vault path to store secret
-      default: "subject/depuuid"
-      required: false
-    vault_secret_key:
-      type: string
-      description: Vault secret key name
-      default: secret
+      description: Secret key for encryption passphrase
+      default: 'storage_encryption_key'
       required: false
 
     # Galaxy config
     admin_email:
       type: string
       description: email of the admin user
-      default: admin@admin.com
-    admin_api_key:
+    admin_password:
       type: string
-      description: key to access the API with admin role
-      default: not_very_secret_api_key
-    user:
+      description: password of the admin user
+      default: galaxy_admin_password
+    ## Vault section for admin_password
+    vault_token:
+      type: tosca.datatypes.indigo.VaultToken
+      description: Hashicorp endpoint description
+      default: {}
+      required: false
+    vault_secrets_path:
       type: string
-      description: username to launch the galaxy daemon
-      default: galaxy
+      description: Secret path
+      default: "sub/dep.uuid/user_secrets"
+      required: false
+    vault_secrets_action:
+      type: string
+      description: Write or read secret
+      default: read
+      required: false
+      constraints:
+        - valid_values: ['read','write']
+    ## End Vault section for admin_password
     version:
       type: string
-      description: Galaxy version to install
-      default: release_20.05
+      description: galaxy version to install
+      default: master
     instance_description:
       type: string
       description: galaxy instance description
-      default: "ELIXIR"
+      default: "INDIGO Galaxy test"
     export_dir:
       type: string
       description: path to store galaxy data
       default: /export
-    enable_galaxy_ie:
+    enable_interactive_tools:
       type: boolean
-      description: Enable Galaxy Interactive Environments (install docker)
-      default: false
+      description: Enable Galaxy Interactive Tools (install docker)
+      default: true
+      required: false
 
-    # Galaxy tools config
     flavor:
       type: string
       description: Galaxy flavor for tools installation
@@ -112,11 +122,9 @@ topology_template:
       type: tosca.nodes.indigo.LuksEncryption
       properties:
         storage_encryption: { get_input: storage_encryption }
-        vault_url: { get_input: vault_url }
-        vault_wrapping_token: { get_input: vault_wrapping_token }
-        vault_secret_path: { get_input: vault_secret_path }
-        vault_secret_key: { get_input: vault_secret_key }
-        #wn_ips: { get_attribute: [ lrms_wn, private_address ] }
+        vault_encryption_token: { get_input: vault_encryption_token }
+        vault_encryption_path:  { get_input: vault_encryption_path }
+        vault_encryption_key:  { get_input: vault_encryption_key }
       requirements:
         - host: galaxy_server
 
@@ -124,10 +132,16 @@ topology_template:
       type: tosca.nodes.indigo.GalaxyPortal
       properties:
         admin_email: { get_input: admin_email }
-        admin_api_key: { get_input: admin_api_key }
+        vault_token: { get_input: vault_token }
+        vault_secrets:
+          path: { get_input: vault_secrets_path }
+          data:
+            admin_password: { get_input: admin_password }
+          action: { get_input: vault_secrets_action }
         version: { get_input: version }
         instance_description: { get_input: instance_description }
         export_dir: { get_input: export_dir }
+        enable_interactive_tools: { get_input: enable_interactive_tools }
         flavor: { get_input: flavor }
       requirements:
         - lrms: local_lrms
@@ -143,7 +157,7 @@ topology_template:
     galaxy_server:
       type: tosca.nodes.indigo.Compute
       properties:
-        os_users: [ {os_user_name: 'testuser', os_user_guid: '4001', os_user_add_to_sudoers: True, os_user_ssh_public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDrm8mxOuqwP5XTHf685V9rqRXXg41F4isJvRr4h3MPDs8PgqZBzzjxEFyGpJ/Rgg4ACesGBZy+CbVVGtOveltKvgkpzyHIrh+vMay9z82eK2LMZEfmEPgw1BHdRifPZ1Qb7Zmj1nRk1EMWoNvbBxEc3/MSorWb+2SVMs+42EZ7QxavBmsU7zNU0Nd0e1xiqJ00VDWMnXullp/ieR9M4/XsSlS3oqxsxkAbY3eQYVMsnh64oiRw3lpYBkPyNtC/VSL5Cqig3CMaiK9AW8FjP1GwwqoMjL0H0Mkr0fY8eSSQ9Tcy5AqyaiPn7tmG0fSeNOFwxGkTzrujqlCiOkRSM1Yj marco@MacBook-Pro-di-Marco.local'} ]
+        os_users: { get_input: users }
       capabilities:
         endpoint:
           properties:

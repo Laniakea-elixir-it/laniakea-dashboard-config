@@ -6,32 +6,18 @@ inputs:
 
   instance_flavor:
     display_name: "Instance flavour"
-    tag_type: "select"
+    type: "select"
     description: "CPUs, memory size (RAM), root disk size"
     constraints: 
+      - { value: "medium", label: "Medium (2 cpu, 4 GB RAM, 20 GB dsk)" }
       - { value: "large", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
       - { value: "xlarge", label: "xLarge (8 cpu, 16 GB RAM, 20 GB dsk)" }
-    tab: "Virtual hardware"
-
-  instance_key_pub:
-    display_name: "Galaxy instance SSH public key"
-    tag_type: "ssh_pub_key_type"
-    description: "Paste here your SSH public key or configure a default key"
-    placeholder: 'Leave blank this field to load your default SSH public key'
-    tab: "Virtual hardware"
-    required: yes
-
-  storage_encryption:
-    display_name: "Enable encryption"
-    tag_type: "toggle"
-    description: "Encrypt instance external storage"
-    constraints:
-      - { value: "True", label: "On" }
+      - { value: "xxlarge", label: "xxLarge (16 cpu, 32 GB RAM, 20 GB dsk)" }
     tab: "Virtual hardware"
 
   storage_size:
     display_name: "Storage volume size"
-    tag_type: "select"
+    type: "select"
     description: "Select storage size"
     constraints:
       - { value: "50 GB", label: "50 GB" }
@@ -42,44 +28,85 @@ inputs:
 
   version:
     display_name: "Galaxy version"
-    tag_type: "select"
-    description: "Galaxy release 19.05 recommended"
+    type: "select"
+    description: "Galaxy release 20.05 recommended"
     constraints:
-      - { value: "release_19.05", label: "Galaxy release 19.05" }
+      - { value: "release_20.05", label: "Galaxy release 20.05" }
     tab: "Galaxy"
 
   instance_description:
     display_name: "Instance description"
-    tag_type: "text"
+    type: "text"
     description: "Set Galaxy Brand"
     default: "ELIXIR-ITALY"
     tab: "Galaxy"
 
   admin_email:
     display_name: "Galaxy administrator e-mail"
-    tag_type: "email"
+    type: "email"
     description: "Type a valid e-mail address."
     tab: "Galaxy"
     required: yes
 
+  admin_password:
+    display_name: "Galaxy administrator password"
+    type: secret
+    description: "Type a valid administrator password."
+    tab: "Galaxy"
+    required: yes
+  vault_token:
+    type: vault_token
+  vault_secrets_path:
+    default: "sub/dep.uuid"
+    type: secrets_path
+  vault_secrets_action:
+    default: 'read'
+    type: secrets_action
+
   flavor:
     display_name: "Galaxy flavours"
-    tag_type: "select"
+    type: "select"
     description: "Load Galaxy tools preset"
-    constraints: 
-      - { value: "galaxy-minimal", label: "Galaxy minimal" }
+    constraints:
+      - { value: "galaxy-minimal", label: "Galaxy minimal" } 
+      - { value: "galaxy-testing", label: "Galaxy flavour test" }
+      - { value: "galaxy-pillar", label: "Galaxy Somatic Variant Detection" }
+      - { value: "galaxy-rna-workbench", label: "Galaxy RNA Workbench" }
+      - { value: "cov-19-test", label: "Galaxy COVID-19" }
       - { value: "galaxy-CoVaCS", label: "Galaxy CoVaCS" }
-      - { value: "galaxy-GDC_Somatic_Variant", label: "Galaxy GDC Somatic Variant Calling" }
-      - { value: "galaxy-rna-workbench", label: "Galaxy RNA workbench" }
       - { value: "galaxy-epigen", label: "Galaxy Epigen" }
+      - { value: "galaxy-GDC_Somatic_Variant", label: "Galaxy GDC Somatic Variant" }
+      - { value: "galaxy-vinyl", label: "Galaxy Vinyl" }
+      - { value: "galaxy-testing-lite", label: "Galaxy flavour test lite" }
     tab: "Galaxy"
 
-  refdata_cvmfs_repository_name:
-    display_name: "Reference data repository"
-    tag_type: "select"
-    description: "Select reference data repository"
+  enable_interactive_tools:
+    default: true
+    type: hidden
+  export_dir:
+    default: /export
+    type: hidden
+
+  storage_encryption:
+    display_name: "Enable encryption"
+    type: "toggle"
+    description: "Encrypt instance external storage"
     constraints:
-      - { value: "data.galaxyproject.org", label: "usegalaxy.org Galaxy reference data CVMFS repository" }
-      - { value: "elixir-italy.covacs.refdata", label: "ELIXIR-IT Galaxy CoVaCS reference data CVMFS repository" }
-      - { value: "elixir-italy.galaxy.refdata", label: "ELIXIR-IT Galaxy reference data CVMFS repository" }
-    tab: "Galaxy"
+      - { value: "True", label: "On" }
+    tab: "Virtual hardware"
+
+  vault_encryption_token:
+    default: { "policy": "write" }
+    type: vault_token
+  vault_encryption_path:
+    type: hidden
+  vault_encryption_key:
+    default: 'storage_encryption_key'
+    type: hidden
+
+  users:
+    type: ssh_user
+
+outputs:
+  os_users:
+    type: ssh_user
