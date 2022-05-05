@@ -70,6 +70,7 @@ topology_template:
     admin_email:
       type: string
       description: email of the admin user
+      default: admin@admin.com
     admin_password:
       type: string
       description: password of the admin user
