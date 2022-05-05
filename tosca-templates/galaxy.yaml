@@ -84,7 +84,7 @@ topology_template:
     vault_token:
       type: tosca.datatypes.indigo.VaultToken
       description: Hashicorp endpoint description
-      default: {}
+      default: { "policy": "read" }
       required: false
     vault_secrets_path:
       type: string
