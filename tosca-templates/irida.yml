@@ -44,12 +44,12 @@ topology_template:
     galaxy_cpus:
       type: integer
       description: Numer of CPUs for the WNs
-      default: 2
+      default: 1
       required: yes
     galaxy_mem:
       type: scalar-unit.size
       description: Amount of Memory for the WNs
-      default: 4 GB
+      default: 1 GB
       required: yes
 
   node_templates:

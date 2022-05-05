@@ -54,6 +54,9 @@ inputs:
     description: "Type a valid administrator password."
     tab: "Galaxy"
     required: yes
+  retrieve_passphrase_from_vault:
+    default: true
+    type: hidden
   vault_token:
     type: vault_token
   vault_secrets_path:

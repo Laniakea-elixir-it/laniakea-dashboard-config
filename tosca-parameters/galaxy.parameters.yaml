@@ -106,7 +106,9 @@ inputs:
     constraints:
       - { value: "True", label: "On" }
     tab: "Virtual hardware"
-
+  retrieve_passphrase_from_vault:
+    default: true
+    type: hidden
   vault_encryption_token:
     default: { "policy": "write" }
     type: vault_token

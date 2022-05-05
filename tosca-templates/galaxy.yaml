@@ -75,6 +75,11 @@ topology_template:
       description: password of the admin user
       default: galaxy_admin_password
     ## Vault section for admin_password
+    retrieve_passphrase_from_vault:
+      type: boolean
+      description: Enable Vault Password workflow
+      default: false
+      required: false
     vault_token:
       type: tosca.datatypes.indigo.VaultToken
       description: Hashicorp endpoint description
@@ -132,6 +137,7 @@ topology_template:
       type: tosca.nodes.indigo.GalaxyPortal
       properties:
         admin_email: { get_input: admin_email }
+        retrieve_passphrase_from_vault: { get_input: retrieve_passphrase_from_vault }
         vault_token: { get_input: vault_token }
         vault_secrets:
           path: { get_input: vault_secrets_path }

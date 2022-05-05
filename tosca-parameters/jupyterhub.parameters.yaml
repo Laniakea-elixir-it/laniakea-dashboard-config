@@ -1,0 +1,54 @@
+# Set here the list of the tabs to be displayed
+tabs: [ "Virtual hardware", "JupyterHub"]
+
+# Set here a new set of inputs to be displayed
+inputs:
+
+  instance_flavor:
+    display_name: "Instance flavour"
+    type: "select"
+    description: "CPUs, memory size (RAM), root disk size"
+    constraints:
+      - { value: "large", label: "Large (4 cpu, 8 GB RAM, 20 GB dsk)" }
+      - { value: "xlarge", label: "xLarge (8 cpu, 16 GB RAM, 20 GB dsk)" }
+    tab: "Virtual hardware"
+
+  storage_size:
+    display_name: "Storage volume size"
+    type: "select"
+    description: "Select storage size"
+    constraints:
+      - { value: "50 GB", label: "50 GB" }
+      - { value: "100 GB", label: "100 GB" }
+      - { value: "200 GB", label: "200 GB" }
+      - { value: "500 GB", label: "500 GB" }
+    tab: "Virtual hardware"
+
+  export_dir:
+    default: /export
+    type: hidden
+
+  admin_password:
+    display_name: "JupyterHub administrator password"
+    type: secret
+    description: "Type a valid administrator password."
+    tab: "JupyterHub"
+    required: yes
+  retrieve_passphrase_from_vault:
+    default: true
+    type: hidden
+  vault_token:
+    type: vault_token
+  vault_secrets_path:
+    default: "sub/dep.uuid"
+    type: secrets_path
+  vault_secrets_action:
+    default: 'read'
+    type: secrets_action
+
+  users:
+    type: ssh_user
+
+outputs:
+  os_users:
+    type: ssh_user
