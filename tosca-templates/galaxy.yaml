@@ -53,7 +53,7 @@ topology_template:
     vault_encryption_token:
       type: tosca.datatypes.indigo.VaultToken
       description: Vault write token for storage encryption
-      default: { "policy": "write" }
+      default: { "endpoint": "example.com", "mountpoint": "secrets", "policy": "write", "wrapping_token": "not_a_wrapping_token" }
       required: false
     vault_encryption_path:
       type: string
@@ -84,7 +84,7 @@ topology_template:
     vault_token:
       type: tosca.datatypes.indigo.VaultToken
       description: Hashicorp endpoint description
-      default: { "policy": "read" }
+      default: { "endpoint": "example.com", "mountpoint": "secrets", "policy": "read", "wrapping_token": "not_a_wrapping_token" }
       required: false
     vault_secrets_path:
       type: string
