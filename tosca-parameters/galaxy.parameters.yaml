@@ -77,6 +77,10 @@ inputs:
     tab: "Galaxy"
     required: yes
 
+  admin_api_key:
+    type: hidden
+    default: random
+
   admin_password:
     display_name: "Galaxy administrator password"
     type: secret
