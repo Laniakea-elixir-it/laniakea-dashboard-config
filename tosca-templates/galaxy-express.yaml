@@ -16,7 +16,7 @@ topology_template:
       description: list of users to create on the VM
       entry_schema:
         type: tosca.datatypes.indigo.User
-      default: [ {"os_user_name": "testuser", "os_user_guid": "8001", "os_user_add_to_sudoers": true, "os_user_ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDH1TyGvTGFzEBK2lSrcCvKVTQiA7jLQJYIPlsWZcyQzfgDhcJEBt93wJpj9cn8rnJHFFwnoRWfMSZqUn0VD+tByIWdi32fgjD/+6zUbyZojFAiiIQN80/8toktw7duynpDJPNgRt6a7PnsFX24s1jhkN8WZShRf6SpubRAUyxgj6Zuz7KQtieY2x2YRdAAXsKpnOGbMi2mE5G+PLVx/t3FzcHheDqNPz6R5j0Ikq/uiobd+E1hwCCW+P8+qa+OPnrhvuNf24mOApwGvEkKDELHJotTLAdCmfbhpuBqTx3BICPikdzOwpJ4tCierU+SxD1wy7ffCEonrEwNN7gBiT9d"} ]
+      default: []
       required: false
 
     instance_flavor:
@@ -37,7 +37,7 @@ topology_template:
     vault_encryption_token:
       type: tosca.datatypes.indigo.VaultToken
       description: Vault write token for storage encryption
-      default: { "endpoint": "example.com", "mountpoint": "secrets", "policy": "write", "wrapping_token": "not_a_wrapping_token" }
+      default: { "policy": "write" }
       required: false
     vault_encryption_path:
       type: string
@@ -55,6 +55,10 @@ topology_template:
       type: string
       description: email of the admin user
       default: admin@admin.com
+    admin_api_key:
+      type: string
+      description: api key admin user.
+      default: random
     admin_password:
       type: string
       description: password of the admin user
@@ -68,7 +72,7 @@ topology_template:
     vault_token:
       type: tosca.datatypes.indigo.VaultToken
       description: Hashicorp endpoint description
-      default: { "endpoint": "example.com", "mountpoint": "secrets", "policy": "read", "wrapping_token": "not_a_wrapping_token" }
+      default: {}
       required: false
     vault_secrets_path:
       type: string
@@ -104,7 +108,7 @@ topology_template:
     flavor:
       type: string
       description: Galaxy flavor for tools installation
-      default: "galaxy-minimal"
+      default: "galaxy-no-tools"
 
   node_templates:
 
@@ -122,6 +126,7 @@ topology_template:
       type: tosca.nodes.indigo.GalaxyPortalExpress
       properties:
         admin_email: { get_input: admin_email }
+        admin_api_key: { get_input: admin_api_key }
         retrieve_passphrase_from_vault: { get_input: retrieve_passphrase_from_vault }
         vault_token: { get_input: vault_token }
         vault_secrets:
@@ -164,6 +169,12 @@ topology_template:
               ftp_passive:
                 protocol: tcp
                 source_range: [ 30000, 30009 ]
+              luksctl_port:
+                protocol: tcp
+                source: 5000
+              laniakea_utils_port:
+                protocol: tcp
+                source: 5001
         # Host container properties
         host:
          properties:
