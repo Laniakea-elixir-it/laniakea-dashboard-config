@@ -108,7 +108,7 @@ topology_template:
     flavor:
       type: string
       description: Galaxy flavor for tools installation
-      default: "galaxy-no-tools"
+      default: "galaxy-minimal"
 
   node_templates:
 
