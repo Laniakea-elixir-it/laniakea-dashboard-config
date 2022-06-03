@@ -1,8 +1,5 @@
 metadata:
-  icon: https://raw.githubusercontent.com/bgruening/docker-galaxy-stable/dev/galaxy/GalaxyDocker.png 
+  icon: https://galaxyproject.org/images/galaxy-logos/galaxy_project_logo_square.png
   display_name: "Galaxy"
-  ribbon: true
-  ribbon_tag: "Docker"
-  ribbon_color: "red"
-  pinned: "yes"
-  pin_order: 1
+  tag: "Docker"
+  tag_color: "yellow"
