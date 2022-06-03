@@ -48,6 +48,10 @@ inputs:
     tab: "Galaxy"
     required: yes
 
+  admin_api_key:
+    type: hidden
+    default: random
+
   admin_password:
     display_name: "Galaxy administrator password"
     type: secret
@@ -99,7 +103,7 @@ inputs:
     tab: "Virtual hardware"
 
   vault_encryption_token:
-    default: { "policy": "write" }
+    default: { "policy": "write" } 
     type: vault_token
   vault_encryption_path:
     type: hidden
