@@ -31,7 +31,8 @@ inputs:
     type: "select"
     description: "Galaxy release 20.05 recommended"
     constraints:
-      - { value: "release_20.05", label: "Galaxy release 20.05" }
+      - { value: "galaxy-express_v4.0.0,release_21.09", label: "Galaxy release 21.09" }
+      - { value: "galaxy_express_v3.0.2,release_20.05", label: "Galaxy release 20.05" }
     tab: "Galaxy"
 
   instance_description:

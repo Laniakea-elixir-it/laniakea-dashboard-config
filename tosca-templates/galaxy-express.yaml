@@ -186,7 +186,7 @@ topology_template:
         # Guest Operating System properties
         os:
           properties:
-            image: galaxy-express
+            image: { get_input: version }
             #version: v1.0.0
       requirements:
         # contextually this can only be a relationship type
