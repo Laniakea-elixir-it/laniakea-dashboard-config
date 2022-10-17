@@ -1,0 +1,5 @@
+metadata:
+  icon: https://raw.githubusercontent.com/jupyterhub/jupyterhub/main/docs/source/_static/images/logo/logo.png
+  display_name: "JupyterHub"
+  tag: "Express"
+  tag_color: "blue"
