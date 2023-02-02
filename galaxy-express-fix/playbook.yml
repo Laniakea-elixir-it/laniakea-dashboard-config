@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Download Galaxy express fix
+      get_url:
+        url: 'https://raw.githubusercontent.com/Laniakea-elixir-it/laniakea-dashboard-config/master/galaxy-express-fix/fix.yml'
+        dest: /tmp/fix.yml
+
+    - include: /tmp/fix.yml
