@@ -1,0 +1,30 @@
+---
+- set_fact:
+    psql_repo_path: '/etc/yum.repos.d/pgdg-redhat-all.repo'
+    galaxy_path: '/home/galaxy/galaxy'
+
+# Check if psql is there
+- name: Check if psql-all repo is installed
+  stat:
+    path: '{{ psql_repo_path }}'
+  register: psql_repo_path_check_result
+
+# Check if this is a express release
+- name: Check if Galaxy is installed
+  stat:
+    path: '{{ galaxy_path }}'
+  register: galaxy_path_check_result
+  when: psql_repo_path_check_result.stat.exists
+
+- name: Remove psql-all repository
+  file:
+    path: '{{ psql_repo_path }}'
+    state: absent
+  when: psql_repo_path_check_result.stat.exists and galaxy_path_check_result.stat.isdir
+
+- name: Install psql-9.6 repository
+  get_url:
+    url: 'https://raw.githubusercontent.com/Laniakea-elixir-it/laniakea-dashboard-config/master/galaxy-express-fix/pgdg-96.repo'
+    dest: /etc/yum.repos.d/pgdg-96.repo
+    mode: '0644' 
+  when: psql_repo_path_check_result.stat.exists and galaxy_path_check_result.stat.isdir
