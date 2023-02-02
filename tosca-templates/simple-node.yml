@@ -45,10 +45,10 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-            #image: ubuntu-20.04
+            image: centos-7-2211
             #distribution: { get_input: os_distribution }
-            distribution: centos
-            version: 7
+            #distribution: centos
+            #version: 7
             #type: Linux
 
   outputs:
